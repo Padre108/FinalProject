@@ -5,15 +5,24 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics import classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 
+
 # Import test data generator
 from data_preprocessing import test_generator
 
+# --- Debug: Print class indices and class distribution ---
+print("Test class indices:", test_generator.class_indices)
+unique, counts = np.unique(test_generator.classes, return_counts=True)
+print("Samples per class (test):", dict(zip(unique, counts)))
+
 # Load the best model
-model = load_model('models/best_model.h5')
+model = load_model('models/best_model.keras')
+
 
 # Predict on test data
 test_generator.reset()
 pred_probs = model.predict(test_generator, verbose=1)
+print("Sample predicted probabilities:", pred_probs[:20].flatten())
+print("Min prob:", np.min(pred_probs), "Max prob:", np.max(pred_probs), "Mean prob:", np.mean(pred_probs))
 preds = (pred_probs > 0.5).astype(int).flatten()
 
 # True labels

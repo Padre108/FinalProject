@@ -1,5 +1,6 @@
 # Model Training Script: ResNet50 Transfer Learning
 import os
+from sklearn.utils.class_weight import compute_class_weight
 from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D
 from tensorflow.keras.models import Model
@@ -25,11 +26,11 @@ NUM_CLASSES = 1  # Binary classification
 
 # Load ResNet50 as feature extractor
 base_model = ResNet50(
-	weights='imagenet',
-	include_top=False,
-	input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)
+    weights='imagenet',
+    include_top=False,
+    input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)
 )
-base_model.trainable = False  # Freeze backbone for initial training
+base_model.trainable = False
 
 # Add custom classification head
 x = base_model.output
@@ -63,17 +64,24 @@ early_stop = EarlyStopping(
 
 # Training
 EPOCHS = 15
-history = model.fit(
-	train_generator,
-	validation_data=val_generator,
-	epochs=EPOCHS,
-	callbacks=[checkpoint, early_stop]
+class_weights = compute_class_weight(
+    class_weight='balanced',
+    classes=np.unique(train_generator.classes),
+    y=train_generator.classes
 )
+class_weight_dict = dict(enumerate(class_weights))
+print("Class weights:", class_weight_dict)
 
-# Optionally, unfreeze some layers and fine-tune
+history = model.fit(
+    train_generator,
+    validation_data=val_generator,
+    epochs=EPOCHS,
+    callbacks=[checkpoint, early_stop],
+    class_weight=class_weight_dict
+)
+# Fine-tuning (optional: you can keep or remove class_weight here)
 base_model.trainable = True
 model.compile(optimizer=Adam(learning_rate=1e-5), loss='binary_crossentropy', metrics=['accuracy'])
 history_finetune = model.fit(train_generator, validation_data=val_generator, epochs=5)
 
-# Save final model
 model.save('models/final_model.keras')

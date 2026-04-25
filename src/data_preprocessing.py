@@ -1,6 +1,8 @@
 # Data Preprocessing for Chest X-ray Classification (ResNet-ready)
 import os
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications.resnet50 import preprocess_input
+
 # Paths to your data folders
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
@@ -15,18 +17,20 @@ BATCH_SIZE = 32
 
 # Data augmentation for training
 train_datagen = ImageDataGenerator(
-	rescale=1./255,
-	rotation_range=15,
-	width_shift_range=0.1,
-	height_shift_range=0.1,
-	shear_range=0.1,
-	zoom_range=0.1,
-	horizontal_flip=True,
-	fill_mode='nearest'
+    preprocessing_function=preprocess_input,
+    rotation_range=15,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    shear_range=0.1,
+    zoom_range=0.1,
+    horizontal_flip=True,
+    fill_mode='nearest'
 )
 
 # Validation and test data: only rescale
-val_test_datagen = ImageDataGenerator(rescale=1./255)
+val_test_datagen = ImageDataGenerator(
+    preprocessing_function=preprocess_input
+)
 
 # Training generator
 train_generator = train_datagen.flow_from_directory(
