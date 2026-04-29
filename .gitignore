@@ -21,8 +21,8 @@ venv/
 Thumbs.db
 
 # Model files (optional, if you don’t want to track large models)
-models/*.h5
-models/*.keras
+# models/
+# *.keras
 
 # Data files (ignored)
 data/*
