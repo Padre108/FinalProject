@@ -1,11 +1,10 @@
 # Model Training Script: ResNet50 Transfer Learning
-import os
 from sklearn.utils.class_weight import compute_class_weight
-from tensorflow.keras.applications import ResNet50
-from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D
-from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
+from keras.applications import ResNet50
+from keras.layers import Dense, Dropout, GlobalAveragePooling2D
+from keras.models import Model
+from keras.optimizers import Adam
+from keras.callbacks import ModelCheckpoint, EarlyStopping
 
 # Import data generators from data_preprocessiong.py
 
