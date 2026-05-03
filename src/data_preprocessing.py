@@ -1,7 +1,7 @@
 # Data Preprocessing for Chest X-ray Classification (ResNet-ready)
 import os
-from keras.preprocessing.image import ImageDataGenerator
-from keras.applications.resnet50 import preprocess_input
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications.resnet50 import preprocess_input
 
 # Paths to your data folders
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
