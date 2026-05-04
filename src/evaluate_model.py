@@ -71,8 +71,8 @@ plt.ylabel('True')
 plt.xticks([0, 1], class_labels)
 plt.yticks([0, 1], class_labels)
 for i in range(2):
-	for j in range(2):
-		plt.text(j, i, cm[i, j], ha='center', va='center', color='red')
+    for j in range(2):
+        plt.text(j, i, cm[i, j], ha='center', va='center', color='red')
 plt.tight_layout()
 plt.show()
 
