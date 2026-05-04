@@ -173,8 +173,10 @@ def log_prediction_event(
     if audit_log_path is None:
         audit_log_path = AUDIT_LOG_PATH
     
-    assert log_dir is not None, "log_dir must be set"
-    assert audit_log_path is not None, "audit_log_path must be set"
+    if log_dir is None:
+        raise ValueError("log_dir must be set")
+    if audit_log_path is None:
+        raise ValueError("audit_log_path must be set")
     
     os.makedirs(log_dir, exist_ok=True)
     

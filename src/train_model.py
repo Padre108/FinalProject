@@ -92,7 +92,7 @@ def select_threshold_for_recall(y_true, y_prob, target_recall):
     Justification:
         In medical imaging, recall (sensitivity) is prioritized: missing a lesion
         is worse than a false positive (which gets reviewed). This function selects
-        the lowest threshold that achieves 95% recall, maximizing precision given that constraint.
+        the threshold that maximizes precision among thresholds meeting the recall constraint.
     """
     precisions, recalls, thresholds = precision_recall_curve(y_true, y_prob)
     if len(thresholds) == 0:
@@ -110,10 +110,11 @@ def select_threshold_for_recall(y_true, y_prob, target_recall):
     return float(thresholds[best]), float(recall_curve[best]), float(precision_curve[best])
 
 
-def evaluate_with_threshold(generator, split_name, threshold):
+def evaluate_with_threshold(model, generator, split_name, threshold):
     """Evaluate model on a data split using a specific decision threshold.
     
     Args:
+        model: Trained model instance
         generator: Data generator (train, val, or test)
         split_name (str): Name for logging (e.g., "Validation")
         threshold (float): Decision threshold for binary classification
@@ -277,8 +278,8 @@ with open("models/decision_threshold.txt", "w", encoding="utf-8") as f:
 
 # ========== Evaluation on Validation and Test Sets ==========
 print("\n=== Final Evaluation ===")
-evaluate_with_threshold(val_generator, "Validation", decision_threshold)
-evaluate_with_threshold(test_generator, "Test", decision_threshold)
+evaluate_with_threshold(model, val_generator, "Validation", decision_threshold)
+evaluate_with_threshold(model, test_generator, "Test", decision_threshold)
 
 # ========== Save Final Model ==========
 model.save("models/final_model.keras")

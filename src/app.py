@@ -64,16 +64,6 @@ def load_trained_model(model_path: str = MODEL_PATH):
         raise FileNotFoundError(f"Model not found: {model_path}")
     return load_model(model_path)
 
-
-
-
-
-
-
-
-
-
-
 # ===== Sidebar (Context & Instructions) =====
 st.sidebar.title("🫁 About")
 st.sidebar.info(
