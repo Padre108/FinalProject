@@ -15,9 +15,7 @@ Key features:
 import os
 import time
 import streamlit as st
-import numpy as np
 from keras.models import load_model
-import tensorflow as tf
 from data_preprocessing import is_likely_chest_xray
 from utils import (
     preprocess_image_file,
