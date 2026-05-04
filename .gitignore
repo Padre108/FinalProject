@@ -26,3 +26,6 @@ Thumbs.db
 
 # Data files (ignored)
 data/*
+
+# Runtime logs (contains sensitive usage metadata)
+logs/

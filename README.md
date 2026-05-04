@@ -1,65 +1,87 @@
-# Final Project
+# Chest X-ray Opacity Classifier
 
-## Overview
-This project is a machine learning pipeline for image classification, organized into data preprocessing, model training, evaluation, and deployment. It uses Keras/TensorFlow for deep learning and is structured for reproducibility and scalability.
+A ResNet50-based deep learning mini app to classify chest X-rays as **Normal** or **Opacity** (pneumonia/fluid).
 
-## Project Structure
-```
-final_project_specs.md         # Project specifications and requirements
-data/                         # Dataset directory
-    train/                    # Training data (normal/opacity)
-    val/                      # Validation data (normal/opacity)
-    test/                     # Test data (normal/opacity)
-models/                       # Saved models (.h5, .keras)
-src/                          # Source code
-    app.py                   # Main application (possibly for inference or API)
-    data_preprocessing.py    # Data preprocessing scripts
-    evaluate_model.py        # Model evaluation scripts
-    train_model.py           # Model training scripts
-    utils.py                 # Utility functions
-```
+## Quick Start
 
-## Setup
-1. Clone the repository.
-2. (Recommended) Create and activate a virtual environment:
-   ```
+1. **Setup:**
+   ```bash
    python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-3. Install dependencies:
-   ```
+   source .venv/bin/activate  # Windows: .venv\Scripts\activate
    pip install -r requirements.txt
    ```
 
-## Usage
-- To train the model:
-  ```
-  python src/train_model.py
-  ```
-- To evaluate the model:
-  ```
-  python src/evaluate_model.py
-  ```
-- To preprocess data:
-  ```
-  python src/data_preprocessing.py
-  ```
-- To run the app (if applicable):
-  ```
-  python src/app.py
-  ```
+2. **Run the app:**
+   ```bash
+   streamlit run src/app.py
+   ```
+   The app opens at `http://localhost:8501`
 
-## Models
-Trained models are saved in the `models/` directory as `.h5` and `.keras` files.
+## How to Use the App
 
-## Data
-Organize your data in the `data/` directory as follows:
-- `train/normal/`, `train/opacity/`
-- `val/normal/`, `val/opacity/`
-- `test/normal/`, `test/opacity/`
+1. **Upload an X-ray:**
+   - Click "Upload a chest X-ray image" on the left panel
+   - Select a JPG, JPEG, or PNG file
+   - The app validates it's a real chest X-ray
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+2. **View Results:**
+   - **Prediction:** Normal or Opacity detected (with confidence %)
+   - **Grad-CAM Heatmap:** Colored overlay showing which regions influenced the prediction
+   - **Raw Probability:** Expand "More Details" for technical metrics
 
-## License
-Specify your license here (e.g., MIT, Apache 2.0, etc.).
+3. **Interpret the Heatmap:**
+   - Bright red/yellow = model focused on these regions
+   - Blue/cool colors = less attention
+   - Use alongside radiologist review—not a diagnosis!
+
+## Training & Evaluation
+
+3. **Or train the model:**
+   ```bash
+   python src/train_model.py
+   ```
+
+4. **Evaluate the model:**
+   ```bash
+   python src/evaluate_model.py
+   ```
+
+## Project Structure
+```
+data/              # Train/val/test splits (normal/opacity folders)
+models/            # Saved .keras models
+src/
+  ├─ app.py        # Streamlit web interface
+  ├─ train_model.py
+  ├─ evaluate_model.py
+  ├─ data_preprocessing.py
+  └─ utils.py
+```
+
+## Model Architecture
+
+- **Backbone:** ResNet50 (ImageNet pre-trained)
+- **Head:** Classification layer with dropout regularization
+- **Loss:** Binary Crossentropy
+- **Training:** 2-stage (freeze backbone → fine-tune)
+- **Threshold:** Optimized for high recall (medical priority)
+
+## Key Features
+
+✅ Grad-CAM heatmaps show which regions influenced predictions  
+✅ Privacy-aware audit logging (file hash only, no raw images stored)  
+✅ Image validation to reject non-X-ray uploads  
+✅ Optimized decision threshold for medical triage  
+
+## Data Organization
+```
+data/train/normal/    data/train/opacity/
+data/val/normal/      data/val/opacity/
+data/test/normal/     data/test/opacity/
+```
+
+---
+
+**Disclaimer:** Triage aid only. Not a clinical diagnosis. Always pair with radiologist review.
+
+
